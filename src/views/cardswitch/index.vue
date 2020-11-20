@@ -47,11 +47,11 @@
     </div>
 </template>
 <script>
-   
-    // 待补充：
-    // 1.浏览器大小变化，样式更新,页面更新；
-    // 懒加载，图片加载失败兜底处理
-    // let intersectionObserver;
+// 修复问题：
+// 1.resize浏览器，后面的资源加载不出来。原因computed获取元素位置，resize时未触发compute更新
+// 待补充：
+// 1.懒加载，图片加载失败兜底处理
+// 2.卡片切换时，背景图和卡片的切换优化
     import {cardList} from './cards.config.js';
     export default{
         data(){
@@ -96,9 +96,6 @@
             }
         },
         mounted(){
-            // document.onmouseup=()=>{
-
-            // }
             this._getContainerRc()
             window.addEventListener('resize',()=>{
                 (this._throttle(this._getContainerRc,300))()
@@ -107,7 +104,7 @@
         },
         methods:{
             _getContainerRc(){
-                console.log('resize',new Date().getTime())
+                // console.log('resize',new Date().getTime())
                 if(this.$refs.container){
                     let $container=this.$refs.container;
                     let cr=$container.getBoundingClientRect();
@@ -116,19 +113,13 @@
                 }
             },    
             handleMouseOver(item,index){
-                // console.log(item.index,112)
-                // console.log(new Date().getTime(),112);
                 this._mouseOverAnimate(item,index)
-                // (this._throttle(this._mouseOverAnimate,200))(item,index)
             },
             handleEnterCard(item){
-                // console.log(item,91)
                 this.showModal=true;
             },
             // 拖拽行为
             dragStartHandler(event){
-                // console.log('drag start',new Date().getTime())
-                // console.log(event.clientX,116)
                 this.canDrag=true;
                 this.startX=event.clientX
             },
